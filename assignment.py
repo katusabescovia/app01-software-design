@@ -1,3 +1,4 @@
+
 from abc import ABC, abstractmethod
 
 # Define interfaces
@@ -24,8 +25,19 @@ class OutputDevice(ABC):
     @abstractmethod
     def output(self) -> str:
         pass
+class WiFi(ABC):
+    def connectToWifi(self) -> str:
+        pass
+    
+    def disconnectFromWifi(self) -> str:
+        pass
+class Bluetooth(ABC):
+    def connectToBluetooth(self) -> str:
+        pass
+    
+    def disconnectFromBluetooth(self) -> str:
+        pass    
 
-# Define classes implementing interfaces
 class Keyboard(InputDevice):
     def input(self) -> str:
         return "Keyboard input"
@@ -64,20 +76,7 @@ class Printer(OutputDevice):
     def output(self) -> str:
         return "Printer output"
 
-# WiFi & Bluetooth classes
-class WiFi:
-    def connect(self) -> str:
-        return "WiFi connected"
-    
-    def disconnect(self) -> str:
-        return "WiFi disconnected"
 
-class Bluetooth:
-    def connect(self) -> str:
-        return "Bluetooth connected"
-    
-    def disconnect(self) -> str:
-        return "Bluetooth disconnected"
 
 # Define Computer class
 class Computer:
@@ -87,16 +86,13 @@ class Computer:
         storage_device: StorageDevice,
         processing_device: ProcessingDevice,
         output_device: OutputDevice,
-        wifi: WiFi = None,
-        bluetooth: Bluetooth = None
+       
     ):
         self._input_device = input_device
         self._storage_device = storage_device
         self._processing_device = processing_device
         self._output_device = output_device
-        self._wifi = wifi
-        self._bluetooth = bluetooth
-
+       
     def set_input_device(self, device: InputDevice) -> None:
         self._input_device = device
 
@@ -109,12 +105,7 @@ class Computer:
     def set_output_device(self, device: OutputDevice) -> None:
         self._output_device = device
 
-    def set_wifi(self, wifi: WiFi) -> None:
-        self._wifi = wifi
-
-    def set_bluetooth(self, bt: Bluetooth) -> None:
-        self._bluetooth = bt
-
+    
     def perform_input(self) -> str:
         return self._input_device.input()
 
@@ -136,6 +127,34 @@ class Computer:
         if self._bluetooth:
             return self._bluetooth.connect()
         return "No Bluetooth support"
+    
+
+
+
+class Laptop(Computer):
+    def __init__(
+        self,
+        wifi: WiFi, 
+        bluetooth: Bluetooth ,
+       
+    ):
+        self.wifi = wifi
+        self.bluetooth = bluetooth
+        
+    def connectToBluetooth(self) -> str:
+        return "Bluetooth connected"
+    
+    def disconnectFromBluetooth(self) -> str:
+        return "Bluetooth disconnected"
+    def connectToWifi(self) -> str:
+        return "WiFi connected"
+    
+    def disconnectFromWifi(self) -> str:
+        return "WiFi disconnected"
+
+
+
+
 
 # Example usage
 keyboard = Keyboard()
@@ -146,19 +165,21 @@ monitor = Monitor()
 wifi = WiFi()
 bluetooth = Bluetooth()
 
-computer = Computer(keyboard, ssd, cpu, monitor, wifi, bluetooth)
+computer = Computer(keyboard, ssd, cpu, monitor)
 print(computer.perform_input())      # Outputs: Keyboard input
 print(computer.perform_storage())    # Outputs: SSD storing data and SSD retrieving data
 print(computer.perform_processing()) # Outputs: CPU processing data
 print(computer.perform_output())     # Outputs: Monitor output
-print(computer.connect_wifi())       # Outputs: WiFi connected
-print(computer.connect_bluetooth())  # Outputs: Bluetooth connected
-
 # Change the input device
 computer.set_input_device(mouse)
 print(computer.perform_input())      # Outputs: Mouse input
-
 # Create a computer without WiFi and Bluetooth support
 basic_computer = Computer(keyboard, ssd, cpu, monitor)
-print(basic_computer.connect_wifi())  # Outputs: No WiFi support
-print(basic_computer.connect_bluetooth()) # Outputs: No Bluetooth support
+
+
+
+Laptop1=Laptop(wifi, bluetooth)
+print(Laptop1.connectToBluetooth())  # Outputs: Bluetooth connected
+print(Laptop1.disconnectFromBluetooth())  # Outputs: Bluetooth disconnected
+print(Laptop1.connectToWifi())  # Outputs: WiFi connected
+print(Laptop1.disconnectFromWifi()) # Outputs:WiFi disconnected
